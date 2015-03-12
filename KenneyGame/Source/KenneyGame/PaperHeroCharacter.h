@@ -23,6 +23,7 @@ public:
 protected:
 	void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 	void MoveRight(float Value);
+	void MoveUp(float Value);
 	void StartJump();
 	void StopJump();
 
@@ -53,9 +54,9 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = Camera)
 	UCameraComponent* SideViewCamera;
 
-	UPROPERTY(BlueprintReadWrite, Category = Movement)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
 	class UPaperFlipbook* IdleFlipbook;
 
-	UPROPERTY(BlueprintReadWrite, Category = Movement)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
 	class UPaperFlipbook* WalkFlipbook;
 };

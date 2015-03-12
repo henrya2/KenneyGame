@@ -60,6 +60,7 @@ void APaperHeroCharacter::SetupPlayerInputComponent(UInputComponent* InputCompon
 	Super::SetupPlayerInputComponent(InputComponent);
 
 	InputComponent->BindAxis("MoveRight", this, &APaperHeroCharacter::MoveRight);
+	InputComponent->BindAxis("MoveUp", this, &APaperHeroCharacter::MoveUp);
 
 	InputComponent->BindAction("Jump", IE_Pressed, this, &APaperHeroCharacter::StartJump);
 	InputComponent->BindAction("Jump", IE_Released, this, &APaperHeroCharacter::StopJump);
@@ -85,6 +86,11 @@ void APaperHeroCharacter::MoveRight(float Value)
 	}
 
 	SetMoveDirection(NewDir);
+}
+
+void APaperHeroCharacter::MoveUp(float Value)
+{
+
 }
 
 void APaperHeroCharacter::StartJump()
