@@ -11,8 +11,11 @@ APaperHeroCharacter::APaperHeroCharacter(const FObjectInitializer& ObjectInitial
 	UCapsuleComponent* MyCapsuleComponent = GetCapsuleComponent();
 	MyCapsuleComponent->SetCapsuleSize(40.0f, 62.0f);
 
+	NormalSpriteZ = -64.0f;
+	CrouchedSprizteZ = -52.0f;
+
 	UPaperFlipbookComponent* SpriteComp = GetSprite();
-	SpriteComp->SetRelativeLocation(FVector(0, 0, -64));
+	SpriteComp->SetRelativeLocation(FVector(0, 0, NormalSpriteZ));
 
 	CameraBoom = ObjectInitializer.CreateDefaultSubobject<USpringArmComponent>(this, TEXT("CameraBoom"));
 	CameraBoom->SetRelativeRotation(FRotator(0, -90.0f, 0));
@@ -32,6 +35,7 @@ APaperHeroCharacter::APaperHeroCharacter(const FObjectInitializer& ObjectInitial
 	UCharacterMovementComponent* CharMovement = GetCharacterMovement();
 	CharMovement->NavAgentProps.bCanCrouch = true;
 	CharMovement->CrouchedHalfHeight = 50.0f;
+	CharMovement->bCanWalkOffLedgesWhenCrouching = true;
 	CharMovement->bConstrainToPlane = true;
 	CharMovement->SetPlaneConstraintNormal(FVector(0, -1.0f, 0));
 	CharMovement->JumpZVelocity = 1000.0f;
@@ -157,6 +161,15 @@ void APaperHeroCharacter::DoCharMoveUpdated(float DeltaSeconds, FVector OldLocat
 		{
 			GetSprite()->SetFlipbook(IdleFlipbook);
 		}
+	}
+
+	if (GetCharacterMovement()->IsCrouching())
+	{
+		GetSprite()->SetRelativeLocation(FVector(0, 0, CrouchedSprizteZ));
+	}
+	else
+	{
+		GetSprite()->SetRelativeLocation(FVector(0, 0, NormalSpriteZ));
 	}
 }
 

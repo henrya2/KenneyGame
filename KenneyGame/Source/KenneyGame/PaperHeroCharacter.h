@@ -70,4 +70,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
 	class UPaperFlipbook* DuckFlipbook;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	float NormalSpriteZ;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	float CrouchedSprizteZ;
+
 };
