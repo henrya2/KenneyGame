@@ -30,6 +30,8 @@ APaperHeroCharacter::APaperHeroCharacter(const FObjectInitializer& ObjectInitial
 	SideViewCamera->OrthoWidth = 1600;
 
 	UCharacterMovementComponent* CharMovement = GetCharacterMovement();
+	CharMovement->NavAgentProps.bCanCrouch = true;
+	CharMovement->CrouchedHalfHeight = 50.0f;
 	CharMovement->bConstrainToPlane = true;
 	CharMovement->SetPlaneConstraintNormal(FVector(0, -1.0f, 0));
 	CharMovement->JumpZVelocity = 1000.0f;
@@ -102,11 +104,25 @@ void APaperHeroCharacter::MoveRight(float Value)
 
 void APaperHeroCharacter::MoveUp(float Value)
 {
+	//FString MsgStr = FString::Printf(TEXT("MoveUP's Value: %f"), Value);
+	//GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Blue, MsgStr);
 
+	if (!GetCharacterMovement()->IsFalling())
+	{
+		if (Value <= -0.3f)
+		{
+			Crouch();
+		}
+		else
+		{
+			UnCrouch();
+		}
+	}
 }
 
 void APaperHeroCharacter::StartJump()
 {
+	UnCrouch();
 	Jump();
 }
 
@@ -125,6 +141,11 @@ void APaperHeroCharacter::DoCharMoveUpdated(float DeltaSeconds, FVector OldLocat
 	if (bFalling)
 	{
 		GetSprite()->SetFlipbook(JumpFlipbook);
+		UnCrouch();
+	}
+	else if (GetCharacterMovement()->IsCrouching())
+	{
+		GetSprite()->SetFlipbook(DuckFlipbook);
 	}
 	else
 	{
@@ -183,4 +204,16 @@ void APaperHeroCharacter::UpdateSpriteDir(EPaperHeroCharacterMoveDirection NewDi
 	{
 		GetSprite()->SetRelativeRotation(FRotator(0, 0, 0));
 	}
+}
+
+bool APaperHeroCharacter::CanJumpInternal_Implementation() const
+{
+	const bool bCanHoldToJumpHigher = (GetJumpMaxHoldTime() > 0.0f) && IsJumpProvidingForce();
+
+	return GetCharacterMovement() && (GetCharacterMovement()->IsMovingOnGround() || bCanHoldToJumpHigher) && GetCharacterMovement()->IsJumpAllowed();
+}
+
+bool APaperHeroCharacter::CanCrouch()
+{
+	return !bIsCrouched && !bPressedJump && GetCharacterMovement() && GetCharacterMovement()->IsMovingOnGround() && GetCharacterMovement()->CanEverCrouch() && (GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight() > GetCharacterMovement()->CrouchedHalfHeight) && GetRootComponent() && !GetRootComponent()->IsSimulatingPhysics();
 }

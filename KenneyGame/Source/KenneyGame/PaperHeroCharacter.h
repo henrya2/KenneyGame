@@ -41,6 +41,10 @@ protected:
 	virtual bool ServerSetMoveDirection_Validate(EPaperHeroCharacterMoveDirection NewDir);
 	virtual void ServerSetMoveDirection_Implementation(EPaperHeroCharacterMoveDirection NewDir);
 
+	virtual bool CanJumpInternal_Implementation() const override;
+
+	virtual bool CanCrouch() override;
+
 	void UpdateSpriteDir(EPaperHeroCharacterMoveDirection NewDir);
 
 protected:
