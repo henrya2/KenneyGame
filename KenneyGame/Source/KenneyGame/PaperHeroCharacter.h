@@ -59,4 +59,11 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
 	class UPaperFlipbook* WalkFlipbook;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	class UPaperFlipbook* JumpFlipbook;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	class UPaperFlipbook* DuckFlipbook;
+
 };

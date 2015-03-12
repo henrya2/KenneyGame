@@ -53,6 +53,18 @@ APaperHeroCharacter::APaperHeroCharacter(const FObjectInitializer& ObjectInitial
 	{
 		IdleFlipbook = IdleFlipbookFinder.Object;
 	}
+
+	static ConstructorHelpers::FObjectFinder<UPaperFlipbook> JumpFlipbookFinder(TEXT("PaperFlipbook'/Game/KenneySpritePack/Players/Green/alienGreen_jump_Flipbook.alienGreen_jump_Flipbook'"));
+	if (JumpFlipbookFinder.Succeeded())
+	{
+		JumpFlipbook = JumpFlipbookFinder.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UPaperFlipbook> DuckFlipbookFinder(TEXT("PaperFlipbook'/Game/KenneySpritePack/Players/Green/alienGreen_duck_Flipbook.alienGreen_duck_Flipbook'"));
+	if (DuckFlipbookFinder.Succeeded())
+	{
+		DuckFlipbook = DuckFlipbookFinder.Object;
+	}
 }
 
 void APaperHeroCharacter::SetupPlayerInputComponent(UInputComponent* InputComponent)
@@ -108,13 +120,22 @@ void APaperHeroCharacter::DoCharMoveUpdated(float DeltaSeconds, FVector OldLocat
 	FVector Velocity = GetVelocity();
 	float Speed = FMath::Sqrt(Velocity.X * Velocity.X + Velocity.Z * Velocity.Z);
 
-	if (Speed > 0)
+	bool bFalling = GetCharacterMovement()->IsFalling();
+
+	if (bFalling)
 	{
-		GetSprite()->SetFlipbook(WalkFlipbook);
+		GetSprite()->SetFlipbook(JumpFlipbook);
 	}
 	else
 	{
-		GetSprite()->SetFlipbook(IdleFlipbook);
+		if (Speed > 0)
+		{
+			GetSprite()->SetFlipbook(WalkFlipbook);
+		}
+		else
+		{
+			GetSprite()->SetFlipbook(IdleFlipbook);
+		}
 	}
 }
 
