@@ -18,6 +18,8 @@ class KENNEYGAME_API APaperHeroCharacter : public APaperCharacter
 public:
 	APaperHeroCharacter(const FObjectInitializer& ObjectInitializer);
 
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 protected:
 	void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 	void MoveRight(float Value);
@@ -35,8 +37,11 @@ protected:
 
 	UFUNCTION(Reliable, server, WithValidation)
 	void ServerSetMoveDirection(EPaperHeroCharacterMoveDirection NewDir);
+	virtual bool ServerSetMoveDirection_Validate(EPaperHeroCharacterMoveDirection NewDir);
+	virtual void ServerSetMoveDirection_Implementation(EPaperHeroCharacterMoveDirection NewDir);
 
 	void UpdateSpriteDir(EPaperHeroCharacterMoveDirection NewDir);
+
 protected:
 	UPROPERTY(Transient, ReplicatedUsing = OnRep_HeroMoveDirection)
 	EPaperHeroCharacterMoveDirection HeroMoveDirection;
